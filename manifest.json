@@ -1,0 +1,38 @@
+{
+
+	"manifest_version": 2,
+	"name": "TabScroller",
+	"version": "1.0.3",
+	"applications": {
+		"gecko": {
+			"id": "{c7e8eb9e-a33a-4ad2-8fa8-89150d8c77f7}",
+			"strict_min_version": "55.0"
+		}
+	},
+
+	"description": "Scroll through tabs with the mouse wheel, while holding down the right button.",
+	"author": "Richard Antony Burton",
+	"homepage_url": "https://github.com/raburton/tabscroller",
+
+	"content_security_policy": "script-src 'self'; object-src 'self';",
+	"permissions": ["storage"],
+
+	"options_ui": {
+		"page": "options.html",
+		"browser_style": true
+	},
+
+	"background": {
+		"scripts": ["background.js"]
+	},
+
+	"content_scripts": [{
+			"matches": ["<all_urls>"],
+			"match_about_blank": true,
+			"all_frames": true,
+			"run_at": "document_start",
+			"js": ["content.js"]
+		}
+	]
+
+}
