@@ -2,7 +2,7 @@
 
 	"manifest_version": 2,
 	"name": "TabScroller",
-	"version": "1.0.3",
+	"version": "1.0.4",
 	"applications": {
 		"gecko": {
 			"id": "{c7e8eb9e-a33a-4ad2-8fa8-89150d8c77f7}",
@@ -15,7 +15,7 @@
 	"homepage_url": "https://github.com/raburton/tabscroller",
 
 	"content_security_policy": "script-src 'self'; object-src 'self';",
-	"permissions": ["storage"],
+	"permissions": ["storage", "browserSettings"],
 
 	"options_ui": {
 		"page": "options.html",

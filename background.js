@@ -6,6 +6,13 @@ let swap = false;
 
 // load the config
 updateConfig();
+enableLinuxOSX();
+
+function enableLinuxOSX() {
+	if (browser.browserSettings.contextMenuShowEvent) {
+		browser.browserSettings.contextMenuShowEvent.set({value: 'mouseup'});
+	}
+}
 
 // switch to next tab and tell tab to block context menu
 function nextTab() {
@@ -67,13 +74,13 @@ browser.runtime.onMessage.addListener((message) => {
 	switch (message.topic) {
 	case 'scrollUp':
 		(swap ? nextTab() : prevTab());
-		return true;
+		break;
 	case 'scrollDown':
 		(swap ? prevTab() : nextTab());
-		return true;
+		break;
 	case 'updateConfig':
 		updateConfig();
-		return true;
+		break;
 	}
 	return false;
 });

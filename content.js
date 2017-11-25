@@ -12,7 +12,7 @@ browser.runtime.onMessage.addListener((message, sender) => {
 	switch (message.topic) {
 	case 'scrolledToTab':
 		blockContextMenu = true;
-		return true;
+		break;
 	}
 	return false;
 });
