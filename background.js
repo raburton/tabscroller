@@ -3,16 +3,35 @@
 // config defaults (should match defaults in option page)
 let wrap = true;
 let swap = false;
+let mac = false;
 
 // load the config
 updateConfig();
 enableLinuxOSX();
+browser.runtime.getPlatformInfo().then(checkPlatform);
 
 function enableLinuxOSX() {
 	if (browser.browserSettings.contextMenuShowEvent) {
 		browser.browserSettings.contextMenuShowEvent.set({value: 'mouseup'});
 	}
 }
+
+function checkPlatform(info) {
+	let newMac = (info.os == "mac");
+	if (mac != newMac) {
+		browser.storage.local.set({
+			mac: newMac
+		});
+		// notify content script in open tabs
+		browser.tabs.query({}).then(tabs => {
+			for (let i = 0; i < tabs.length; i++) {
+				browser.tabs.sendMessage(tabs[i].id, {
+					topic: 'updateConfig'
+				});
+			}
+		});
+	}
+};
 
 // switch to next tab and tell tab to block context menu
 function nextTab() {
@@ -62,10 +81,12 @@ function updateConfig() {
 	// get swap & wrap values, defaults to current values
 	browser.storage.local.get({
 		swap: swap,
-		wrap: wrap
+		wrap: wrap,
+		mac: mac
 	}).then(result => {
 		swap = result.swap;
 		wrap = result.wrap;
+		mac = result.mac;
 	});
 }
 
