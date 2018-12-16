@@ -36,7 +36,8 @@ function checkPlatform(info) {
 // switch to next tab and tell tab to block context menu
 function nextTab() {
 	browser.tabs.query({
-		currentWindow: true
+		currentWindow: true,
+		hidden: false
 	}).then(tabs => {
 		let next = tabs.find(tab => tab.active).index + 1;
 		if (next >= tabs.length) {
@@ -58,7 +59,8 @@ function nextTab() {
 // switch to previous tab and tell tab to block context menu
 function prevTab() {
 	browser.tabs.query({
-		currentWindow: true
+		currentWindow: true,
+		hidden: false
 	}).then(tabs => {
 		let prev = tabs.find(tab => tab.active).index - 1;
 		if (prev < 0) {
