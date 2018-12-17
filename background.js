@@ -40,7 +40,7 @@ function nextTab() {
 		hidden: false
 	}).then(tabs => {
 		let next = tabs.find(tab => tab.active).index + 1;
-		if (next >= tabs.length) {
+		if (!tabs.find(tab => tab.index == next)) {
 			if (!wrap)
 				return true;
 			else
