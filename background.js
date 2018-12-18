@@ -39,8 +39,8 @@ function nextTab() {
 		currentWindow: true,
 		hidden: false
 	}).then(tabs => {
-		let next = tabs.find(tab => tab.active).index + 1;
-		if (!tabs.find(tab => tab.index == next)) {
+		let next = tabs.findIndex(tab => tab.active) + 1;
+		if (next >= tabs.length) {
 			if (!wrap)
 				return true;
 			else
@@ -62,7 +62,7 @@ function prevTab() {
 		currentWindow: true,
 		hidden: false
 	}).then(tabs => {
-		let prev = tabs.find(tab => tab.active).index - 1;
+		let prev = tabs.findIndex(tab => tab.active) - 1;
 		if (prev < 0) {
 			if (!wrap)
 				return true;
