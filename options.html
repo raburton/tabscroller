@@ -4,7 +4,7 @@
 		<meta charset="utf-8">
 	</head>
 	<body style="margin: 6px;">
-		<h3>Options</h3>
+		<h2>Options</h2>
 		<form>
 			<table>
 				<tr>
@@ -20,6 +20,33 @@
 					</div>
 				</tr>
 				<tr>
+					<h4>Require button and/or key(s) (with the wheel):</h4>
+					<div class="browser-style">
+						<input type="checkbox" id="mouse" />
+						<label for="mouse">Right mouse button</label>
+					</div>
+					<div class="browser-style">
+						<input type="checkbox" id="shift" />
+						<label for="shift">Shift</label>
+						&nbsp;
+						<input type="checkbox" id="ctrl" />
+						<label for="ctrl">Ctrl</label>
+						&nbsp;
+						<input type="checkbox" id="alt" />
+						<label for="alt">Alt</label>
+						&nbsp;
+						<input type="checkbox" id="meta" />
+						<label for="meta">Meta</label>
+					</div>
+					<div>&nbsp;</div>
+				</tr>
+				<tr>
+					<div id="error" class="browser-style" style="display: none;">
+						Error: You must select at least one button or key.
+						<br /><br />
+					</div>
+				</tr>
+				<tr>
 					<button type="submit" class="browser-style">Save</button>
 				</tr>
 			</table>
@@ -27,3 +54,4 @@
 		<script src="options.js"></script>
 	</body>
 </html>
+

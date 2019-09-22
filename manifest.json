@@ -2,7 +2,7 @@
 
 	"manifest_version": 2,
 	"name": "TabScroller",
-	"version": "1.0.7.2",
+	"version": "1.0.8",
 	"applications": {
 		"gecko": {
 			"id": "{c7e8eb9e-a33a-4ad2-8fa8-89150d8c77f7}",
@@ -10,7 +10,7 @@
 		}
 	},
 
-	"description": "Scroll through tabs with the mouse wheel, while holding down the right button.",
+	"description": "Scroll through tabs with the mouse wheel, while holding down the right button (and/or modifier keys).",
 	"author": "Richard Antony Burton",
 	"homepage_url": "https://github.com/raburton/tabscroller",
 
@@ -36,3 +36,4 @@
 	]
 
 }
+

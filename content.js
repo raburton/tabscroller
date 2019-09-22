@@ -5,30 +5,49 @@ const RIGHT_BUTTON = 2;
 // flag to indicate we should block the context menu
 let blockContextMenu = false;
 
-// work around lack of mac button info
+// work around lack of mac button info on wheel event
 let mac = false;
-let macHack = false;
+let macMouse = false;
+
+// config defaults (should match defaults in options.js)
+let keyAlt = false;
+let keyCtrl = false;
+let keyMeta = false;
+let keyShift = false;
+let btnMouse = true;
 
 // load initial config
 updateConfig();
 
 // load the config needed in the content script
 function updateConfig() {
+	// get settings, default to current values
 	browser.storage.local.get({
-		mac: mac
+		mac: mac,
+		alt: keyAlt,
+		ctrl: keyCtrl,
+		meta: keyMeta,
+		shift: keyShift,
+		mouse: btnMouse,
 	}).then(result => {
 		mac = result.mac;
+		keyAlt = result.alt;
+		keyCtrl = result.ctrl;
+		keyMeta = result.meta;
+		keyShift = result.shift;
+		btnMouse = result.mouse;
 	});
 }
 
 // message from background to indicate tab has been scrolled
-// to and that we should disable the context menu for when
-// the user releases the mouse button
+//   to and that we should disable the context menu for when
+//   the user releases the mouse button
+// or to indicate we need to update our config
 browser.runtime.onMessage.addListener((message, sender) => {
 	switch (message.topic) {
 	case 'scrolledToTab':
 		blockContextMenu = true;
-		if (mac) macHack = true;
+		if (mac) macMouse = true;
 		break;
 	case 'updateConfig':
 		updateConfig();
@@ -40,17 +59,17 @@ browser.runtime.onMessage.addListener((message, sender) => {
 window.addEventListener('mousedown', function (event) {
 	// re-enable context menu on right button press
 	// (will be disabled again if users scrolls while holding)
+	// and track right mouse button press on mac
 	if (event.button === RIGHT_BUTTON) {
-		if (mac) macHack = true;
+		if (mac) macMouse = true;
 		if (blockContextMenu) blockContextMenu = false;
 	}
 }, true);
 
 window.addEventListener('mouseup', function (event) {
-	// re-enable context menu on right button press
-	// (will be disabled again if users scrolls while holding)
-	if (mac && macHack && (event.button === RIGHT_BUTTON)) {
-		macHack = false;
+	// track right mouse button release on mac
+	if (mac && macMouse && (event.button === RIGHT_BUTTON)) {
+		macMouse = false;
 	}
 }, true);
 
@@ -65,7 +84,11 @@ window.addEventListener('contextmenu', function (event) {
 window.addEventListener('wheel', function (event) {
 
 	// only act if right mouse button held down
-	if (event.isTrusted && ((event.buttons & RIGHT_BUTTON) || macHack)) {
+	// and/or required modifier keys (if any set)
+	if (event.isTrusted &&
+		(!btnMouse || ((event.buttons & RIGHT_BUTTON) || macMouse)) &&
+		(!keyAlt || event.altKey) && (!keyShift || event.shiftKey) &&
+		(!keyCtrl || event.ctrlKey) && (!keyMeta || event.metaKey)) {
 
 		// prevent page scrolling
 		event.preventDefault();
@@ -79,13 +102,14 @@ window.addEventListener('wheel', function (event) {
 			browser.runtime.sendMessage({
 				topic: 'scrollDown'
 			});
-			if (mac) macHack = false;
+			if (mac) macMouse = false;
 		} else if (event.deltaY < 0) {
 			browser.runtime.sendMessage({
 				topic: 'scrollUp'
 			});
-			if (mac) macHack = false;
+			if (mac) macMouse = false;
 		}
 	}
 
 }, true);
+
