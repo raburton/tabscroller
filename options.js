@@ -24,6 +24,7 @@ function saveOptions(e) {
 		meta: document.querySelector("#meta").checked,
 		shift: document.querySelector("#shift").checked,
 		mouse: document.querySelector("#mouse").checked,
+		limit: document.querySelector("#limit").value,
 	});
 	// notify background script
 	browser.runtime.sendMessage({
@@ -49,6 +50,7 @@ function restoreOptions() {
 		meta: false,
 		shift: false,
 		mouse: true,
+		limit: "0",
 	}).then(result => {
 		document.querySelector("#alt").checked = result.alt;
 		document.querySelector("#swap").checked = result.swap;
@@ -57,6 +59,7 @@ function restoreOptions() {
 		document.querySelector("#meta").checked = result.meta;
 		document.querySelector("#shift").checked = result.shift;
 		document.querySelector("#mouse").checked = result.mouse;
+		document.querySelector("#limit").value = result.limit;
 	});
 }
 
