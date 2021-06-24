@@ -20,6 +20,18 @@
 					</div>
 				</tr>
 				<tr>
+					<div class="browser-style">
+						<input type="number" id="limit" size="6" />
+						<label for="limit">Minimum tab change interval (ms)</label>
+					</div>
+				</tr>
+				<tr>
+					<div id="limiterror" class="browser-style" style="display: none;">
+						Error: Value must be between 0 (off) and 1000.
+						<br /><br />
+					</div>
+				</tr>
+				<tr>
 					<h4>Require button and/or key(s) (with the wheel):</h4>
 					<div class="browser-style">
 						<input type="checkbox" id="mouse" />
@@ -38,7 +50,6 @@
 						<input type="checkbox" id="meta" />
 						<label for="meta">Meta</label>
 					</div>
-					<div>&nbsp;</div>
 				</tr>
 				<tr>
 					<div id="error" class="browser-style" style="display: none;">
@@ -47,6 +58,7 @@
 					</div>
 				</tr>
 				<tr>
+					<br />
 					<button type="submit" class="browser-style">Save</button>
 				</tr>
 			</table>

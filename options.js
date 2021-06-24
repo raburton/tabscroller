@@ -3,6 +3,8 @@
 function saveOptions(e) {
 	e.preventDefault();
 	
+	let invalid = false;
+	
 	// ensure at least one button/key selected
 	if (!document.querySelector("#alt").checked &&
 		!document.querySelector("#ctrl").checked &&
@@ -10,11 +12,22 @@ function saveOptions(e) {
 		!document.querySelector("#shift").checked &&
 		!document.querySelector("#mouse").checked) {
 		
-		document.querySelector("#error").style = "display: block;";
-		return;
+		document.querySelector("#error").style = "display: block; color: red;";
+		invalid = true;
 	} else {
 		document.querySelector("#error").style = "display: none;";
 	}
+	
+	if (document.querySelector("#limit").value < 0 ||
+		document.querySelector("#limit").value > 1000) {
+		
+		document.querySelector("#limiterror").style = "display: block; color: red;";
+		invalid = true;
+	} else {
+		document.querySelector("#limiterror").style = "display: none;";
+	}
+	
+	if (invalid) return;
 	
 	browser.storage.local.set({
 		alt: document.querySelector("#alt").checked,
@@ -24,6 +37,7 @@ function saveOptions(e) {
 		meta: document.querySelector("#meta").checked,
 		shift: document.querySelector("#shift").checked,
 		mouse: document.querySelector("#mouse").checked,
+		limit: document.querySelector("#limit").value,
 	});
 	// notify background script
 	browser.runtime.sendMessage({
@@ -49,6 +63,7 @@ function restoreOptions() {
 		meta: false,
 		shift: false,
 		mouse: true,
+		limit: 0,
 	}).then(result => {
 		document.querySelector("#alt").checked = result.alt;
 		document.querySelector("#swap").checked = result.swap;
@@ -57,6 +72,7 @@ function restoreOptions() {
 		document.querySelector("#meta").checked = result.meta;
 		document.querySelector("#shift").checked = result.shift;
 		document.querySelector("#mouse").checked = result.mouse;
+		document.querySelector("#limit").value = result.limit;
 	});
 }
 

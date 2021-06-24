@@ -9,6 +9,10 @@ let blockContextMenu = false;
 let mac = false;
 let macMouse = false;
 
+// scroll rate limiting option
+let limit = 0;
+let lastScroll = 0;
+
 // config defaults (should match defaults in options.js)
 let keyAlt = false;
 let keyCtrl = false;
@@ -29,6 +33,7 @@ function updateConfig() {
 		meta: keyMeta,
 		shift: keyShift,
 		mouse: btnMouse,
+		limit: limit,
 	}).then(result => {
 		mac = result.mac;
 		keyAlt = result.alt;
@@ -36,6 +41,7 @@ function updateConfig() {
 		keyMeta = result.meta;
 		keyShift = result.shift;
 		btnMouse = result.mouse;
+		limit = +result.limit;
 	});
 }
 
@@ -46,6 +52,7 @@ function updateConfig() {
 browser.runtime.onMessage.addListener((message, sender) => {
 	switch (message.topic) {
 	case 'scrolledToTab':
+		if (limit > 0) lastScroll = (new Date()).getTime();
 		blockContextMenu = true;
 		if (mac) macMouse = true;
 		break;
@@ -97,6 +104,13 @@ window.addEventListener('wheel', function (event) {
 		// prevent context menu when button released
 		blockContextMenu = true;
 
+		// if scroll limit set, check time since last scroll
+		if (limit > 0) {
+			let ms = (new Date()).getTime();
+			if (ms < lastScroll + limit) return;
+			lastScroll = ms;
+		}
+
 		// send tab scroll request to background
 		if (event.deltaY > 0) {
 			browser.runtime.sendMessage({
@@ -111,5 +125,5 @@ window.addEventListener('wheel', function (event) {
 		}
 	}
 
-}, true);
+}, { passive: false });
 
