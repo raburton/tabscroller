@@ -4,6 +4,9 @@
 let wrap = true;
 let swap = false;
 let mac = false;
+let skipurls = {};
+let skiploading = false;
+let skipdiscarded = false;
 
 // load the config
 updateConfig();
@@ -35,16 +38,33 @@ function checkPlatform(info) {
 
 // switch to next tab and tell tab to block context menu
 function nextTab() {
-	browser.tabs.query({
+	var query = {
 		currentWindow: true,
-		hidden: false
-	}).then(tabs => {
-		let next = tabs.findIndex(tab => tab.active) + 1;
-		if (next >= tabs.length) {
-			if (!wrap)
-				return true;
-			else
-				next = 0;
+		hidden: false,
+	};
+	if (skiploading) query['status'] = 'complete';
+	if (skipdiscarded) query['discarded'] = false;
+	browser.tabs.query(query).then(tabs => {
+		let current = tabs.findIndex(tab => tab.active);
+		let next = current + 1;
+		while (true) {
+			// past the last tab?
+			if (next >= tabs.length) {
+				if (!wrap) {
+					return true;
+				} else {
+					next = 0;
+				}
+			}
+			// lapped all the way around
+			if (next == current) return true;
+			// skip urls
+			if (skipurls.indexOf(tabs[next].url) > -1) {
+				next++;
+				continue;
+			}
+			// if we get here, we have a tab to switch to
+			break;
 		}
 		browser.tabs.sendMessage(tabs[next].id, {
 			topic: 'scrolledToTab'
@@ -58,16 +78,33 @@ function nextTab() {
 
 // switch to previous tab and tell tab to block context menu
 function prevTab() {
-	browser.tabs.query({
+	var query = {
 		currentWindow: true,
-		hidden: false
-	}).then(tabs => {
-		let prev = tabs.findIndex(tab => tab.active) - 1;
-		if (prev < 0) {
-			if (!wrap)
-				return true;
-			else
-				prev = tabs.length - 1;
+		hidden: false,
+	};
+	if (skiploading) query['status'] = 'complete';
+	if (skipdiscarded) query['discarded'] = false;
+	browser.tabs.query(query).then(tabs => {
+		let current = tabs.findIndex(tab => tab.active);
+		let prev = current - 1;
+		while (true) {
+			// before the first tab?
+			if (prev < 0) {
+				if (!wrap) {
+					return true;
+				} else {
+					prev = tabs.length - 1;
+				}
+			}
+			// lapped all the way around
+			if (prev == current) return true;
+			// skip urls
+			if (skipurls.indexOf(tabs[prev].url) > -1) {
+				prev--;
+				continue;
+			}
+			// if we get here, we have a tab to switch to
+			break;
 		}
 		browser.tabs.sendMessage(tabs[prev].id, {
 			topic: 'scrolledToTab'
@@ -80,15 +117,21 @@ function prevTab() {
 }
 
 function updateConfig() {
-	// get swap & wrap values, defaults to current values
+	// get new config, defaulting to current values
 	browser.storage.local.get({
 		swap: swap,
 		wrap: wrap,
-		mac: mac
+		mac: mac,
+		skipurls: skipurls,
+		skiploading: skiploading,
+		skipdiscarded: skipdiscarded,
 	}).then(result => {
 		swap = result.swap;
 		wrap = result.wrap;
 		mac = result.mac;
+		skipurls = result.skipurls.split(/\r?\n/).filter(element => element);
+		skiploading = result.skiploading;
+		skipdiscarded = result.skipdiscarded;
 	});
 }
 
