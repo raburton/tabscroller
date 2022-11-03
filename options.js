@@ -1,5 +1,20 @@
 'use strict';
 
+const permissionsToRequest = {
+  permissions: ["tabs"],
+}
+
+function requestPermissions() {
+	function onResponse(response) {
+		if (response) {
+			document.querySelector("#tabpermerror").style = "display: none;";
+		} else {
+			document.querySelector("#tabpermerror").style = "display: block; color: red;";
+		}
+	}
+	browser.permissions.request(permissionsToRequest).then(onResponse);
+}
+
 function saveOptions(e) {
 	e.preventDefault();
 	
@@ -28,6 +43,8 @@ function saveOptions(e) {
 	}
 	
 	if (invalid) return;
+	
+	if (document.querySelector("#skipurls").value.length > 0) requestPermissions();
 	
 	browser.storage.local.set({
 		alt: document.querySelector("#alt").checked,

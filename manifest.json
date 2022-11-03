@@ -15,7 +15,8 @@
 	"homepage_url": "https://github.com/raburton/tabscroller",
 
 	"content_security_policy": "script-src 'self'; object-src 'self';",
-	"permissions": ["storage", "browserSettings", "tabs"],
+	"permissions": ["storage", "browserSettings"],
+	"optional_permissions": ["tabs"],
 
 	"options_ui": {
 		"page": "options.html",

@@ -58,20 +58,27 @@
 					</div>
 				</tr>
 				<tr>
-				<h4>Skip tabs:</h4>
-				<div class="browser-style">
-					<input type="checkbox" id="skipdiscarded" />
-					<label for="skipdiscarded">Marked as discarded</label>
-				</div>
-				<div class="browser-style">
-					<input type="checkbox" id="skiploading" />
-					<label for="skiploading">Not fully loaded</label>
-				</div>
-				<label>By url (exact):<br>
-					<textarea id="skipurls" rows="10" cols="30"></textarea>
-					</label> 
+					<h4>Skip tabs:</h4>
+					<div class="browser-style">
+						<input type="checkbox" id="skipdiscarded" />
+						<label for="skipdiscarded">Marked as discarded</label>
+					</div>
+					<div class="browser-style">
+						<input type="checkbox" id="skiploading" />
+						<label for="skiploading">Not fully loaded</label>
+					</div>
+					<label>By url (exact):</label><br />
+					<textarea id="skipurls" rows="10" cols="30"></textarea><br />
+					<div>Skip by url requires extension be granted 'tab' access permission.</div>
 				</tr>
-				<tr><br /></tr>
+				<tr>
+					<div id="tabpermerror" class="browser-style" style="display: none;">
+						'Tab' access permission denied, url skipping will not work.
+					</div>
+				</tr>
+				<tr>
+					<br />
+				</tr>
 				<tr>
 					<br />
 					<button type="submit" class="browser-style">Save &amp; Apply</button>
