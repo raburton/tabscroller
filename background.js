@@ -122,7 +122,7 @@ function updateConfig() {
 		swap: swap,
 		wrap: wrap,
 		mac: mac,
-		skipurls: skipurls,
+		skipurls: "",
 		skiploading: skiploading,
 		skipdiscarded: skipdiscarded,
 	}).then(result => {
