@@ -2,7 +2,7 @@
 
 	"manifest_version": 2,
 	"name": "TabScroller",
-	"version": "1.0.10",
+	"version": "1.0.10.1",
 	"applications": {
 		"gecko": {
 			"id": "{c7e8eb9e-a33a-4ad2-8fa8-89150d8c77f7}",
